@@ -32,19 +32,10 @@ CREATE TABLE `acceso` (
   UNIQUE KEY `acc_id_UNIQUE` (`acc_id`),
   KEY `FK1_ACCESO_idx` (`acc_funcionario_id`),
   KEY `FK2_ACCESO_idx` (`acc_modulo_id`),
-  CONSTRAINT `FK1_ACCESO` FOREIGN KEY (`acc_funcionario_id`) REFERENCES `funcionario` (`func_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK2_ACCESO` FOREIGN KEY (`acc_modulo_id`) REFERENCES `modulo` (`mod_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK1_ACCESO` FOREIGN KEY (`acc_funcionario_id`) REFERENCES `funcionario` (`func_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `FK2_ACCESO` FOREIGN KEY (`acc_modulo_id`) REFERENCES `modulo` (`mod_id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que registra los accesos por medio del sistema';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `acceso`
---
-
-LOCK TABLES `acceso` WRITE;
-/*!40000 ALTER TABLE `acceso` DISABLE KEYS */;
-/*!40000 ALTER TABLE `acceso` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `area`
@@ -60,18 +51,9 @@ CREATE TABLE `area` (
   PRIMARY KEY (`are_id`),
   UNIQUE KEY `are_id_UNIQUE` (`are_id`),
   KEY `FK1_AREA_idx` (`are_estado_id`),
-  CONSTRAINT `FK1_AREA` FOREIGN KEY (`are_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK1_AREA` FOREIGN KEY (`are_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena la informacion de las areas demarcadas en el sistema';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `area`
---
-
-LOCK TABLES `area` WRITE;
-/*!40000 ALTER TABLE `area` DISABLE KEYS */;
-/*!40000 ALTER TABLE `area` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `area_modulo`
@@ -90,20 +72,11 @@ CREATE TABLE `area_modulo` (
   KEY `FK1_AREA_MODULO_idx` (`armo_area_id`),
   KEY `FK2_AREA_MODULO_idx` (`armo_modulo_id`),
   KEY `FK3_AREA_MODULO_idx` (`armo_estado_id`),
-  CONSTRAINT `FK1_AREA_MODULO` FOREIGN KEY (`armo_area_id`) REFERENCES `area` (`are_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK2_AREA_MODULO` FOREIGN KEY (`armo_modulo_id`) REFERENCES `modulo` (`mod_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK3_AREA_MODULO` FOREIGN KEY (`armo_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK1_AREA_MODULO` FOREIGN KEY (`armo_area_id`) REFERENCES `area` (`are_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `FK2_AREA_MODULO` FOREIGN KEY (`armo_modulo_id`) REFERENCES `modulo` (`mod_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `FK3_AREA_MODULO` FOREIGN KEY (`armo_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que relaciona la informacion de area y modulos';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `area_modulo`
---
-
-LOCK TABLES `area_modulo` WRITE;
-/*!40000 ALTER TABLE `area_modulo` DISABLE KEYS */;
-/*!40000 ALTER TABLE `area_modulo` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `autorizacion`
@@ -126,22 +99,13 @@ CREATE TABLE `autorizacion` (
   KEY `FK3_AUTORIZACION_idx` (`aut_usuario_id`),
   KEY `FK4_AUTORIZACION_idx` (`aut_estado_id`),
   KEY `FK4_AUTORIZACION_idx1` (`aut_tautorizacion_id`),
-  CONSTRAINT `FK1_AUTORIZACION` FOREIGN KEY (`aut_funcionario_id`) REFERENCES `funcionario` (`func_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK2_AUTORIZACION` FOREIGN KEY (`aut_modulo_id`) REFERENCES `modulo` (`mod_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK3_AUTORIZACION` FOREIGN KEY (`aut_usuario_id`) REFERENCES `usuario` (`usu_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK4_AUTORIZACION` FOREIGN KEY (`aut_tautorizacion_id`) REFERENCES `tipo_autorizacion` (`taut_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK5_AUTORIZACION` FOREIGN KEY (`aut_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK1_AUTORIZACION` FOREIGN KEY (`aut_funcionario_id`) REFERENCES `funcionario` (`func_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `FK2_AUTORIZACION` FOREIGN KEY (`aut_modulo_id`) REFERENCES `modulo` (`mod_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `FK3_AUTORIZACION` FOREIGN KEY (`aut_usuario_id`) REFERENCES `usuario` (`usu_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `FK4_AUTORIZACION` FOREIGN KEY (`aut_tautorizacion_id`) REFERENCES `tipo_autorizacion` (`taut_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `FK5_AUTORIZACION` FOREIGN KEY (`aut_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena las autorizaciones para los permisos provisionales';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `autorizacion`
---
-
-LOCK TABLES `autorizacion` WRITE;
-/*!40000 ALTER TABLE `autorizacion` DISABLE KEYS */;
-/*!40000 ALTER TABLE `autorizacion` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `estado`
@@ -157,19 +121,9 @@ CREATE TABLE `estado` (
   PRIMARY KEY (`sta_id`),
   UNIQUE KEY `sta_id_UNIQUE` (`sta_id`),
   KEY `FK1_ESTADO_idx` (`sta_estado_id`),
-  CONSTRAINT `FK1_ESTADO` FOREIGN KEY (`sta_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK1_ESTADO` FOREIGN KEY (`sta_estado_id`) REFERENCES `estado` (`sta_id`) ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena los estados disponibles';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `estado`
---
-
-LOCK TABLES `estado` WRITE;
-/*!40000 ALTER TABLE `estado` DISABLE KEYS */;
-INSERT INTO `estado` VALUES (1,'Activo',1),(2,'Inactivo',1),(3,'Provisional',1);
-/*!40000 ALTER TABLE `estado` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `funcionario`
@@ -181,7 +135,7 @@ DROP TABLE IF EXISTS `funcionario`;
 CREATE TABLE `funcionario` (
   `func_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Campo que registra el id del funcionario',
   `func_tdocumento_id` int(11) DEFAULT NULL COMMENT 'Campo que registra el tipo de documento del funcionario',
-  `func_documento` varchar(45) DEFAULT NULL COMMENT 'Campo que registra el documento del funcionario',
+  `func_documento` varchar(11) DEFAULT NULL COMMENT 'Campo que registra el documento del funcionario',
   `func_tarjeta` varchar(45) NOT NULL COMMENT 'Campo que registra el codigo de la tarjeta RFID del funcionario',
   `func_nombres` varchar(100) DEFAULT NULL COMMENT 'Campo que registra los nombres del funcionario',
   `func_apellidos` varchar(100) DEFAULT NULL COMMENT 'Campo que registra los apellidos del funcionario',
@@ -190,19 +144,10 @@ CREATE TABLE `funcionario` (
   UNIQUE KEY `func_id_UNIQUE` (`func_id`),
   KEY `FK1_FUNCIONARIO_idx` (`func_tdocumento_id`),
   KEY `FK2_FUNCIONARIO_idx` (`func_estado_id`),
-  CONSTRAINT `FK1_FUNCIONARIO` FOREIGN KEY (`func_tdocumento_id`) REFERENCES `tipo_documento` (`tdoc_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK2_FUNCIONARIO` FOREIGN KEY (`func_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que registra los datos de los funcionarios que usan el sistema	';
+  CONSTRAINT `FK1_FUNCIONARIO` FOREIGN KEY (`func_tdocumento_id`) REFERENCES `tipo_documento` (`tdoc_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `FK2_FUNCIONARIO` FOREIGN KEY (`func_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='Tabla que registra los datos de los funcionarios que usan el sistema	';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `funcionario`
---
-
-LOCK TABLES `funcionario` WRITE;
-/*!40000 ALTER TABLE `funcionario` DISABLE KEYS */;
-/*!40000 ALTER TABLE `funcionario` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `modulo`
@@ -216,24 +161,15 @@ CREATE TABLE `modulo` (
   `mod_nombre` varchar(100) NOT NULL COMMENT 'Campo que registra el nombre del modulo',
   `mod_fecha` date NOT NULL COMMENT 'Campo que registra la ultima fecha de edicion de informacion del modulo',
   `mod_usuario_id` int(11) NOT NULL COMMENT 'Campo que registra el ultimo usuario que realizo una edicion de informacion del modulo',
-  `mod_estado` int(11) NOT NULL COMMENT 'Campo que registra el estado del modulo',
+  `mod_estado` int(11) NOT NULL DEFAULT '1' COMMENT 'Campo que registra el estado del modulo',
   PRIMARY KEY (`mod_id`),
   UNIQUE KEY `mod_id_UNIQUE` (`mod_id`),
   KEY `FK1_MODULO_idx` (`mod_usuario_id`),
   KEY `FK2_MODULO_idx` (`mod_estado`),
-  CONSTRAINT `FK1_MODULO` FOREIGN KEY (`mod_usuario_id`) REFERENCES `usuario` (`usu_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK2_MODULO` FOREIGN KEY (`mod_estado`) REFERENCES `estado` (`sta_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK1_MODULO` FOREIGN KEY (`mod_usuario_id`) REFERENCES `usuario` (`usu_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `FK2_MODULO` FOREIGN KEY (`mod_estado`) REFERENCES `estado` (`sta_id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena la informacion de los modulos implementados en el sistema';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `modulo`
---
-
-LOCK TABLES `modulo` WRITE;
-/*!40000 ALTER TABLE `modulo` DISABLE KEYS */;
-/*!40000 ALTER TABLE `modulo` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `tipo_autorizacion`
@@ -249,18 +185,9 @@ CREATE TABLE `tipo_autorizacion` (
   PRIMARY KEY (`taut_id`),
   UNIQUE KEY `taut_id_UNIQUE` (`taut_id`),
   KEY `FK1_TIPO_AUTORIZACION_idx` (`taut_estado_id`),
-  CONSTRAINT `FK1_TIPO_AUTORIZACION` FOREIGN KEY (`taut_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK1_TIPO_AUTORIZACION` FOREIGN KEY (`taut_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena los tipos de autorizacion';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tipo_autorizacion`
---
-
-LOCK TABLES `tipo_autorizacion` WRITE;
-/*!40000 ALTER TABLE `tipo_autorizacion` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tipo_autorizacion` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `tipo_documento`
@@ -273,21 +200,13 @@ CREATE TABLE `tipo_documento` (
   `tdoc_id` int(11) NOT NULL COMMENT 'Campo que registra el id del tipo de documento',
   `tdoc_nombre` varchar(45) NOT NULL COMMENT 'Campo que registra el nombre del tipo de documento',
   `tdoc_estado_id` int(11) NOT NULL COMMENT 'Campo que registra el estado del tipo de documento',
+  `tdoc_sigla` varchar(2) NOT NULL,
   PRIMARY KEY (`tdoc_id`),
   UNIQUE KEY `tdoc_id_UNIQUE` (`tdoc_id`),
   KEY `FK1_TIPO_DOCUMENTO_idx` (`tdoc_estado_id`),
-  CONSTRAINT `FK1_TIPO_DOCUMENTO` FOREIGN KEY (`tdoc_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK1_TIPO_DOCUMENTO` FOREIGN KEY (`tdoc_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena los tipos de documentos de los usuarios';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tipo_documento`
---
-
-LOCK TABLES `tipo_documento` WRITE;
-/*!40000 ALTER TABLE `tipo_documento` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tipo_documento` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `tipo_usuario`
@@ -303,18 +222,9 @@ CREATE TABLE `tipo_usuario` (
   PRIMARY KEY (`tusu_id`),
   UNIQUE KEY `tusu_id_UNIQUE` (`tusu_id`),
   KEY `FK1_TIPO_USUARIO_idx` (`tusu_estado_id`),
-  CONSTRAINT `FK1_TIPO_USUARIO` FOREIGN KEY (`tusu_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `FK1_TIPO_USUARIO` FOREIGN KEY (`tusu_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena los tipos de usuario que pueden acceder a la aplicacion';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tipo_usuario`
---
-
-LOCK TABLES `tipo_usuario` WRITE;
-/*!40000 ALTER TABLE `tipo_usuario` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tipo_usuario` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `usuario`
@@ -327,26 +237,18 @@ CREATE TABLE `usuario` (
   `usu_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Campo que registra el id del usuario',
   `usu_tusuario_id` int(11) NOT NULL COMMENT 'Campo que registra el tipo de usuario del usuario',
   `usu_username` varchar(45) NOT NULL COMMENT 'Campo que registra el nombre de usuario del usuario',
-  `usu_password` varchar(45) NOT NULL COMMENT 'Campo que registra la contraseña de acceso del usuario',
+  `password` varchar(60) NOT NULL COMMENT 'Campo que registra la contraseña de acceso del usuario',
   `usu_estado_id` int(11) NOT NULL COMMENT 'Campo que registra el estado del usuario',
+  `remember_token` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`usu_id`),
   UNIQUE KEY `usu_id_UNIQUE` (`usu_id`),
   UNIQUE KEY `usu_username_UNIQUE` (`usu_username`),
   KEY `FK1_USUARIO_idx` (`usu_tusuario_id`),
   KEY `FK2_USUARIO_idx` (`usu_estado_id`),
-  CONSTRAINT `FK1_USUARIO` FOREIGN KEY (`usu_tusuario_id`) REFERENCES `tipo_usuario` (`tusu_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `FK2_USUARIO` FOREIGN KEY (`usu_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena los datos de usuarios que acceden a la aplicacion';
+  CONSTRAINT `FK1_USUARIO` FOREIGN KEY (`usu_tusuario_id`) REFERENCES `tipo_usuario` (`tusu_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `FK2_USUARIO` FOREIGN KEY (`usu_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena los datos de usuarios que acceden a la aplicacion';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `usuario`
---
-
-LOCK TABLES `usuario` WRITE;
-/*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-/*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -357,4 +259,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-07 14:52:49
+-- Dump completed on 2016-06-17 16:44:13
