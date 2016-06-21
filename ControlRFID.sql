@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `acceso`;
 CREATE TABLE `acceso` (
   `acc_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Campo que registra el id del acceso',
   `acc_funcionario_id` int(11) NOT NULL COMMENT 'Campo que registra el funcionario que realiza el acceso',
-  `acc_modulo_id` varchar(10) NOT NULL COMMENT 'Campo que registra el modulo al que realiza el acceso',
+  `acc_modulo_id` int(11) NOT NULL COMMENT 'Campo que registra el modulo al que realiza el acceso',
   `acc_fecha` date NOT NULL COMMENT 'Campo que registra la fecha en la que se realiza el acceso',
   `acc_hora` time NOT NULL COMMENT 'Campo que registra la hora en la que se realiza el acceso',
   PRIMARY KEY (`acc_id`),
@@ -34,7 +34,7 @@ CREATE TABLE `acceso` (
   KEY `FK2_ACCESO_idx` (`acc_modulo_id`),
   CONSTRAINT `FK1_ACCESO` FOREIGN KEY (`acc_funcionario_id`) REFERENCES `funcionario` (`func_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `FK2_ACCESO` FOREIGN KEY (`acc_modulo_id`) REFERENCES `modulo` (`mod_id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que registra los accesos por medio del sistema';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Tabla que registra los accesos por medio del sistema';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +65,7 @@ DROP TABLE IF EXISTS `area_modulo`;
 CREATE TABLE `area_modulo` (
   `armo_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Campo que registra el id de la relacion area modulo',
   `armo_area_id` int(11) NOT NULL COMMENT 'Campo que registra el area de la relacion area modulo',
-  `armo_modulo_id` varchar(10) NOT NULL COMMENT 'Campo que registra el modulo de la relacion area modulo',
+  `armo_modulo_id` int(11) NOT NULL COMMENT 'Campo que registra el modulo de la relacion area modulo',
   `armo_estado_id` int(11) NOT NULL COMMENT 'Campo que registra el estado de la relacion area modulo',
   PRIMARY KEY (`armo_id`),
   UNIQUE KEY `armo_id_UNIQUE` (`armo_id`),
@@ -88,7 +88,7 @@ DROP TABLE IF EXISTS `autorizacion`;
 CREATE TABLE `autorizacion` (
   `aut_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Campo que registra el id de la autorizacion',
   `aut_funcionario_id` int(11) NOT NULL COMMENT 'Campo que registra el id del funcionario al que se le realiza la autorizacion',
-  `aut_modulo_id` varchar(10) NOT NULL COMMENT 'Campo que registra el id del modulo al que se le realiza la autorizacion para el funcionario',
+  `aut_modulo_id` int(11) NOT NULL COMMENT 'Campo que registra el id del modulo al que se le realiza la autorizacion para el funcionario',
   `aut_usuario_id` int(11) NOT NULL COMMENT 'Campo que registra el id del usuario que realiza la autorizacion',
   `aut_tautorizacion_id` int(11) NOT NULL COMMENT 'Campo que registra el tipo de autorizacion de la autorizacion',
   `aut_estado_id` int(11) NOT NULL COMMENT 'Campo que registra el estado de la autorizacion',
@@ -104,7 +104,26 @@ CREATE TABLE `autorizacion` (
   CONSTRAINT `FK3_AUTORIZACION` FOREIGN KEY (`aut_usuario_id`) REFERENCES `usuario` (`usu_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `FK4_AUTORIZACION` FOREIGN KEY (`aut_tautorizacion_id`) REFERENCES `tipo_autorizacion` (`taut_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `FK5_AUTORIZACION` FOREIGN KEY (`aut_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena las autorizaciones para los permisos provisionales';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena las autorizaciones para los permisos provisionales';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `configuracion_server`
+--
+
+DROP TABLE IF EXISTS `configuracion_server`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `configuracion_server` (
+  `conser_id` int(11) NOT NULL COMMENT 'Campo que registra el id del servidor',
+  `conser_address` varchar(45) NOT NULL COMMENT 'Campo que registra la direccion de acceso del servidor',
+  `conser_port` int(11) NOT NULL COMMENT 'Campo que registra el puerto de acceso del servidor',
+  `conser_estado` int(11) NOT NULL COMMENT 'Campo que registra el estado de la configuracion del servidor',
+  PRIMARY KEY (`conser_id`),
+  UNIQUE KEY `conser_id_UNIQUE` (`conser_id`),
+  KEY `FKO_CONFIGURACION_SERVER_idx` (`conser_estado`),
+  CONSTRAINT `FKO_CONFIGURACION_SERVER` FOREIGN KEY (`conser_estado`) REFERENCES `estado` (`sta_id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena la configuracion del servidor para el uso del web socket	';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -134,6 +153,7 @@ DROP TABLE IF EXISTS `funcionario`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `funcionario` (
   `func_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Campo que registra el id del funcionario',
+  `func_tfuncionario_id` int(11) NOT NULL DEFAULT '1' COMMENT 'Campo que registra el tipo de funcionario',
   `func_tdocumento_id` int(11) DEFAULT NULL COMMENT 'Campo que registra el tipo de documento del funcionario',
   `func_documento` varchar(11) DEFAULT NULL COMMENT 'Campo que registra el documento del funcionario',
   `func_tarjeta` varchar(45) NOT NULL COMMENT 'Campo que registra el codigo de la tarjeta RFID del funcionario',
@@ -142,11 +162,13 @@ CREATE TABLE `funcionario` (
   `func_estado_id` int(11) NOT NULL COMMENT 'Campo que registra el estado del funcionario',
   PRIMARY KEY (`func_id`),
   UNIQUE KEY `func_id_UNIQUE` (`func_id`),
+  KEY `FK0_FUNCIONARIO_idx` (`func_tfuncionario_id`),
   KEY `FK1_FUNCIONARIO_idx` (`func_tdocumento_id`),
   KEY `FK2_FUNCIONARIO_idx` (`func_estado_id`),
+  CONSTRAINT `FK0_FUNCIONARIO` FOREIGN KEY (`func_tfuncionario_id`) REFERENCES `tipo_funcionario` (`tfunc_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `FK1_FUNCIONARIO` FOREIGN KEY (`func_tdocumento_id`) REFERENCES `tipo_documento` (`tdoc_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `FK2_FUNCIONARIO` FOREIGN KEY (`func_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='Tabla que registra los datos de los funcionarios que usan el sistema	';
+  CONSTRAINT `FK2_FUNCIONARIO` FOREIGN KEY (`func_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Tabla que registra los datos de los funcionarios que usan el sistema	';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -157,18 +179,20 @@ DROP TABLE IF EXISTS `modulo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `modulo` (
-  `mod_id` varchar(10) NOT NULL COMMENT 'Campo que registra el id del modulo',
+  `mod_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Campo que registra el id del modulo',
+  `mod_codigo` varchar(8) NOT NULL COMMENT 'Campo que registra el codigo del modulo',
   `mod_nombre` varchar(100) NOT NULL COMMENT 'Campo que registra el nombre del modulo',
   `mod_fecha` date NOT NULL COMMENT 'Campo que registra la ultima fecha de edicion de informacion del modulo',
   `mod_usuario_id` int(11) NOT NULL COMMENT 'Campo que registra el ultimo usuario que realizo una edicion de informacion del modulo',
   `mod_estado` int(11) NOT NULL DEFAULT '1' COMMENT 'Campo que registra el estado del modulo',
   PRIMARY KEY (`mod_id`),
   UNIQUE KEY `mod_id_UNIQUE` (`mod_id`),
+  UNIQUE KEY `mod_codigo_UNIQUE` (`mod_codigo`),
   KEY `FK1_MODULO_idx` (`mod_usuario_id`),
   KEY `FK2_MODULO_idx` (`mod_estado`),
   CONSTRAINT `FK1_MODULO` FOREIGN KEY (`mod_usuario_id`) REFERENCES `usuario` (`usu_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `FK2_MODULO` FOREIGN KEY (`mod_estado`) REFERENCES `estado` (`sta_id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena la informacion de los modulos implementados en el sistema';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena la informacion de los modulos implementados en el sistema';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -199,13 +223,31 @@ DROP TABLE IF EXISTS `tipo_documento`;
 CREATE TABLE `tipo_documento` (
   `tdoc_id` int(11) NOT NULL COMMENT 'Campo que registra el id del tipo de documento',
   `tdoc_nombre` varchar(45) NOT NULL COMMENT 'Campo que registra el nombre del tipo de documento',
-  `tdoc_estado_id` int(11) NOT NULL COMMENT 'Campo que registra el estado del tipo de documento',
   `tdoc_sigla` varchar(2) NOT NULL,
+  `tdoc_estado_id` int(11) NOT NULL COMMENT 'Campo que registra el estado del tipo de documento',
   PRIMARY KEY (`tdoc_id`),
   UNIQUE KEY `tdoc_id_UNIQUE` (`tdoc_id`),
   KEY `FK1_TIPO_DOCUMENTO_idx` (`tdoc_estado_id`),
   CONSTRAINT `FK1_TIPO_DOCUMENTO` FOREIGN KEY (`tdoc_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena los tipos de documentos de los usuarios';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tipo_funcionario`
+--
+
+DROP TABLE IF EXISTS `tipo_funcionario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tipo_funcionario` (
+  `tfunc_id` int(11) NOT NULL COMMENT 'Campo que registra el id del tipo de funcionario',
+  `tfunc_nombre` varchar(45) NOT NULL COMMENT 'Campo que registra el nombre del tipo de funcionario',
+  `tfunc_estado` int(11) NOT NULL COMMENT 'Campo que registra el estado del tipo de funcionario',
+  PRIMARY KEY (`tfunc_id`),
+  UNIQUE KEY `tfunc_id_UNIQUE` (`tfunc_id`),
+  KEY `FK0_TFUNCIONARIO_idx` (`tfunc_estado`),
+  CONSTRAINT `FK0_TFUNCIONARIO` FOREIGN KEY (`tfunc_estado`) REFERENCES `estado` (`sta_id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena la informacion del tipo de funcionario';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -247,7 +289,7 @@ CREATE TABLE `usuario` (
   KEY `FK2_USUARIO_idx` (`usu_estado_id`),
   CONSTRAINT `FK1_USUARIO` FOREIGN KEY (`usu_tusuario_id`) REFERENCES `tipo_usuario` (`tusu_id`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `FK2_USUARIO` FOREIGN KEY (`usu_estado_id`) REFERENCES `estado` (`sta_id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena los datos de usuarios que acceden a la aplicacion';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='Tabla que almacena los datos de usuarios que acceden a la aplicacion';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -259,4 +301,4 @@ CREATE TABLE `usuario` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-06-17 16:44:13
+-- Dump completed on 2016-06-21 10:18:14
